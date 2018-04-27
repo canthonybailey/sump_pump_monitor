@@ -11,7 +11,7 @@
 ### END INIT INFO
  
 # Change the next 3 lines to suit where you install your script and what you want to call it
-DIR=/home/pi/sump
+DIR=/home/pi/sump_pump_monitor/src
 DAEMON=$DIR/sump_monitor_service.py
 DAEMON_NAME=sump_monitor_service
  
