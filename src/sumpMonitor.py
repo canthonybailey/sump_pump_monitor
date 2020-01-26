@@ -4,7 +4,8 @@ import RPi.GPIO as GPIO
 import time
 import numpy
 
-GPIO.setmode(GPIO.BCM)
+
+
 sump_last_turned_on_time=time.time() # time in seconds as a float
 sump_turn_on_counter=0
 
@@ -18,6 +19,7 @@ def log_turn_on(channel):
   print 'sump turned on: count: ', sump_turn_on_counter
 
 def setup_gpio():
+  GPIO.setmode(GPIO.BCM)
   GPIO.setup(23, GPIO.OUT)# ultrasonic trigger
   GPIO.setup(24, GPIO.IN) # ultrasonic echo
   GPIO.setup(25, GPIO.IN, pull_up_down=GPIO.PUD_UP) # sump motor contact

@@ -5,9 +5,17 @@ Python:
   pip install paho-mqtt       // mqtt libraries
   sudo pip install paho-mqtt  // systemd service runs as root, need to ensure root has access to python libraries
 
+  pip install AWSIoTPythonSDK
+  pip install rpi.gpio
+  pip install numpy
+
 Service definition needs to be in 
   ln ~/sump_pump_monitor/src/sump_pump_monitor.service /lib/systemd/system/sump_pump_monitor.service
 
   systemctl daemon-reload
   systemctl start|stop|restart sump_pump_monitor
   systemctl status sump_pump_monitor
+
+
+AWS Iot
+  policy - need to set permissions by topic
