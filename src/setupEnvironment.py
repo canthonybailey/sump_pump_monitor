@@ -71,7 +71,13 @@ def setupLogging(logToFile):
 
     # Configure logging
     logger = logging.getLogger("AWSIoTPythonSDK.core")
-    logger.setLevel(LOG_LEVEL)
+    logger.setLevel(logging.ERROR)
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(streamHandler)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(formatter)
     logger.addHandler(streamHandler)

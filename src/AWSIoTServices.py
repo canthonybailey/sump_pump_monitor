@@ -1,7 +1,7 @@
 # setup logging
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
-logger = logging.getLogger("AWSIoTPythonSDK.core")
+logger = logging.getLogger()
 
 myAWSIoTMQTTClient = None
 clientConnected = False
@@ -18,7 +18,7 @@ def onClientDisconnected():
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
-    
+
     print("Received a new message: ")
     print(message.payload)
     print("from topic: ")
