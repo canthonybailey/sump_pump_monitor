@@ -15,9 +15,9 @@ import setupEnvironment
 logger = logging.getLogger()
 
 setupEnvironment.setupLogging(False)
-args = setupEnvironment.getCommandLineArgs()
-AWSIoTServices.setupAWSClient(args)
-topic = "bailey/sump/status"
+config_json = setupEnvironment.getConfig("/home/pi/sump_pump_monitor/src/config.json")
+AWSIoTServices.setupAWSClient(config_json)
+topic = config_json["sumpPumpMonitor"]["topic"]
 AWSIoTServices.listenForMessages(topic)
 
 sumpMonitor.setup_gpio()
@@ -32,7 +32,7 @@ while True:
     payload["sumpMinSinceLastTurnOn"]=mins_since_last_pump
     payload["sumpWaterLevel"]=cmDistance
 
-    print "publishing device data" + json.dumps(payload)
+    print("publishing device data {}".format(json.dumps(payload)))
     
     AWSIoTServices.sendMessage(topic, json.dumps(payload))
     time.sleep(10)

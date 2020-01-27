@@ -20,7 +20,7 @@ def log_turn_on(channel):
 
   sump_turn_on_counter += 1
   sump_last_turned_on_time=time.time()
-  print 'sump turned on: count: ', sump_turn_on_counter
+  print('sump turned on: count: {}'.format(sump_turn_on_counter))
 
 def setup_gpio():
   logger.info("Setup GPIO")
@@ -52,13 +52,13 @@ def getWaterLevel():
     GPIO.output(23, GPIO.LOW)
 
     #measure time time for echo
-    for count1 in xrange(10000):
+    for count1 in range(1,10000):
         inp = GPIO.input(24)
         if inp:
             start = time.time()
             break
 
-    for count2 in xrange(10000):
+    for count2 in range(1,10000):
         inp = GPIO.input(24)
         if not inp:
             stop = time.time()
@@ -78,16 +78,16 @@ def measureSumpWaterLevel():
         waterLevelMeasurements.append(getWaterLevel())
         time.sleep(0.1)
 
-    print "measureSumpWaterLevel() - ", waterLevelMeasurements
+    print("measureSumpWaterLevel() - {}".format(waterLevelMeasurements))
     return(numpy.median(waterLevelMeasurements))
         
 def cleanup_gpio():
   GPIO.cleanup()
   
 if __name__ == "__main__":
-  print "testing module"
+  print("testing module")
   setup_gpio()
-  print measureSumpWaterLevel()
+  print(measureSumpWaterLevel())
   cleanup_gpio()
 
 
