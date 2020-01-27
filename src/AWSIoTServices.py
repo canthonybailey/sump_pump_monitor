@@ -26,15 +26,15 @@ def customCallback(client, userdata, message):
     print("--------------\n\n")
 
 
-def setupAWSClient(host, port, rootCAPath, certificatePath, privateKeyPath, clientId, topic):
+def setupAWSClient(args):    
     logger.debug("setting up device connection to AWS")
 
     # Init AWSIoTMQTTClient
     global myAWSIoTMQTTClient
-    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
-    myAWSIoTMQTTClient.configureEndpoint(host, port)
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(args.clientId)
+    myAWSIoTMQTTClient.configureEndpoint(args.host, args.port)
     myAWSIoTMQTTClient.configureCredentials(
-        rootCAPath, privateKeyPath, certificatePath)
+        args.rootCAPath, args.privateKeyPath, args.certificatePath)
 
     # AWSIoTMQTTClient connection configuration
     myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
@@ -84,8 +84,7 @@ if __name__ == "__main__":
 
     # Read in command-line parameters
     args = setupEnvironment.getCommandLineArgs()
-    setupAWSClient(args.host, args.port, args.rootCAPath,
-                   args.certificatePath, args.privateKeyPath, args.clientId, args.topic)
+    setupAWSClient(args)
 
     topic = "bailey/sump/status"
     listenForMessages(topic)

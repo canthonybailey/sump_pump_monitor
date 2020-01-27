@@ -3,6 +3,10 @@
 import RPi.GPIO as GPIO
 import time
 import numpy
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 
@@ -19,6 +23,7 @@ def log_turn_on(channel):
   print 'sump turned on: count: ', sump_turn_on_counter
 
 def setup_gpio():
+  logger.info("Setup GPIO")
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(23, GPIO.OUT)# ultrasonic trigger
   GPIO.setup(24, GPIO.IN) # ultrasonic echo
@@ -26,6 +31,7 @@ def setup_gpio():
   GPIO.add_event_detect(25, GPIO.RISING, callback=log_turn_on, bouncetime=300)
 
 def getWaterLevel():
+    #logger.debug("get water level - single measurement")
     # sensor measures distance down to top of water,
     # need to convert this to height of water level in sump
     # sump is 28 cm deep
@@ -65,6 +71,7 @@ def getWaterLevel():
 
 
 def measureSumpWaterLevel():
+    logger.debug("measure water level - median of samples measurement")
     numIterations = 10
     waterLevelMeasurements=[]
     for i in range(0,numIterations):
