@@ -26,15 +26,17 @@ def customCallback(client, userdata, message):
     print("--------------\n\n")
 
 
-def setupAWSClient(host, port, rootCAPath, certificatePath, privateKeyPath, clientId, topic):
+def setupAWSClient(config_json):    
     logger.debug("setting up device connection to AWS")
 
     # Init AWSIoTMQTTClient
     global myAWSIoTMQTTClient
-    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
-    myAWSIoTMQTTClient.configureEndpoint(host, port)
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(config_json["awsIoT"]["clientId"])
+    myAWSIoTMQTTClient.configureEndpoint(config_json["awsIoT"]["endpoint"], config_json["awsIoT"]["port"])
     myAWSIoTMQTTClient.configureCredentials(
-        rootCAPath, privateKeyPath, certificatePath)
+        config_json["awsIoT"]["rootCACertFile"], 
+        config_json["awsIoT"]["privateKeyFile"], 
+        config_json["awsIoT"]["certificateFile"])
 
     # AWSIoTMQTTClient connection configuration
     myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
@@ -63,7 +65,7 @@ def sendMessage(topic, messageJson):
 
 
 def listenForMessages(topic):
-    logger.info("listening for messages from AWS")
+    logger.info("listening for messages from AWS on topic {}".format(topic))
 
     # Connect and subscribe to AWS IoT
     global myAWSIoTMQTTClient
@@ -83,11 +85,11 @@ if __name__ == "__main__":
     setupEnvironment.setupLogging("false")
 
     # Read in command-line parameters
-    args = setupEnvironment.getCommandLineArgs()
-    setupAWSClient(args.host, args.port, args.rootCAPath,
-                   args.certificatePath, args.privateKeyPath, args.clientId, args.topic)
+    config_json = setupEnvironment.getConfig("src/config.json")
+    setupAWSClient(config_json)
 
-    topic = "bailey/sump/status"
+    topic = config_json["sumpPumpMonitor"]["topic"]
+    logger.debug("Read topic from config: {}".format(topic))
     listenForMessages(topic)
 
     # Publish to the same topic in a loop forever

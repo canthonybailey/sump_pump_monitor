@@ -1,5 +1,8 @@
 import argparse
 import logging
+import json
+
+
 
 # Defaults
 LOG_FILENAME = "/tmp/sump_monitor_service.log"
@@ -7,6 +10,17 @@ LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 
 AllowedActions = ['both', 'publish', 'subscribe']
 
+def getConfig(config_file_path):
+    with open(config_file_path) as json_file:
+        config_json = json.load(json_file)
+
+    return config_json
+        
+    #for p in data['people']:
+    #    print('Name: ' + p['name'])
+    #    print('Website: ' + p['website'])
+    #    print('From: ' + p['from'])
+    #    print('')
 
 def getCommandLineArgs():
     global LOG_FILENAME
@@ -71,7 +85,7 @@ def setupLogging(logToFile):
 
     # Configure logging
     logger = logging.getLogger("AWSIoTPythonSDK.core")
-    logger.setLevel(logging.ERROR)
+    logger.setLevel(logging.DEBUG)
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(formatter)
     logger.addHandler(streamHandler)

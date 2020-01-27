@@ -3,6 +3,10 @@
 import RPi.GPIO as GPIO
 import time
 import numpy
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 
@@ -16,9 +20,10 @@ def log_turn_on(channel):
 
   sump_turn_on_counter += 1
   sump_last_turned_on_time=time.time()
-  print 'sump turned on: count: ', sump_turn_on_counter
+  print('sump turned on: count: {}'.format(sump_turn_on_counter))
 
 def setup_gpio():
+  logger.info("Setup GPIO")
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(23, GPIO.OUT)# ultrasonic trigger
   GPIO.setup(24, GPIO.IN) # ultrasonic echo
@@ -26,6 +31,7 @@ def setup_gpio():
   GPIO.add_event_detect(25, GPIO.RISING, callback=log_turn_on, bouncetime=300)
 
 def getWaterLevel():
+    #logger.debug("get water level - single measurement")
     # sensor measures distance down to top of water,
     # need to convert this to height of water level in sump
     # sump is 28 cm deep
@@ -46,13 +52,13 @@ def getWaterLevel():
     GPIO.output(23, GPIO.LOW)
 
     #measure time time for echo
-    for count1 in xrange(10000):
+    for count1 in range(1,10000):
         inp = GPIO.input(24)
         if inp:
             start = time.time()
             break
 
-    for count2 in xrange(10000):
+    for count2 in range(1,10000):
         inp = GPIO.input(24)
         if not inp:
             stop = time.time()
@@ -65,22 +71,23 @@ def getWaterLevel():
 
 
 def measureSumpWaterLevel():
+    logger.debug("measure water level - median of samples measurement")
     numIterations = 10
     waterLevelMeasurements=[]
     for i in range(0,numIterations):
         waterLevelMeasurements.append(getWaterLevel())
         time.sleep(0.1)
 
-    print "measureSumpWaterLevel() - ", waterLevelMeasurements
+    print("measureSumpWaterLevel() - {}".format(waterLevelMeasurements))
     return(numpy.median(waterLevelMeasurements))
         
 def cleanup_gpio():
   GPIO.cleanup()
   
 if __name__ == "__main__":
-  print "testing module"
+  print("testing module")
   setup_gpio()
-  print measureSumpWaterLevel()
+  print(measureSumpWaterLevel())
   cleanup_gpio()
 
 
