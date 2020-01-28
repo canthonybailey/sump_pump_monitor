@@ -17,6 +17,8 @@ logger = logging.getLogger("sump.sump_monitor_service")
 setupEnvironment.setupLogging(False)
 config_json = setupEnvironment.getConfig("/home/pi/sump_pump_monitor/src/config.json")
 AWSIoTServices.setupAWSClient(config_json)
+AWSIoTServices.connect()
+
 topic = config_json["sumpPumpMonitor"]["topic"]
 AWSIoTServices.listenForMessages(topic)
 

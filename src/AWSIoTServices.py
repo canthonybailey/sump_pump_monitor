@@ -53,20 +53,30 @@ def sendMessage(topic, messageJson):
     global myAWSIoTMQTTClient
     global clientConnected
 
-    if clientConnected:
-        myAWSIoTMQTTClient.publish(topic, messageJson, 1)
-    else:
-        logger.error("not connected - can not send")
+    try:
+       myAWSIoTMQTTClient.publish(topic, messageJson, 1)
+    except Exception as e:
+       logger.error("Could not publish message to topic {} : {}".format(topic, e))
 
 
 def listenForMessages(topic):
-    logger.info("listening for messages from AWS on topic {}".format(topic))
-
     # Connect and subscribe to AWS IoT
     global myAWSIoTMQTTClient
-    myAWSIoTMQTTClient.connect()
-    myAWSIoTMQTTClient.subscribe(topic, 1, customCallback)
+    try:
+        myAWSIoTMQTTClient.subscribe(topic, 1, customCallback)
+        logger.info("listening for messages from AWS on topic {}".format(topic))
+    except Exception as e:
+        logger.error("Could not subscribe to topic {}".format(topic))
 
+def connect():
+    # Connect and subscribe to AWS IoT
+    global myAWSIoTMQTTClient
+    try:
+        myAWSIoTMQTTClient.connect()
+    except Exception as e:
+        logger.error("Could not connect to AWS IoT: {}".format(e))
+
+    
 
 # if module invoked directly, do a simple test of AWS IoT Connection
 if __name__ == "__main__":
