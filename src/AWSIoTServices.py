@@ -1,7 +1,7 @@
 # setup logging
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
-logger = logging.getLogger()
+logger = logging.getLogger("sump.AWSIoTService")
 
 myAWSIoTMQTTClient = None
 clientConnected = False
@@ -18,13 +18,8 @@ def onClientDisconnected():
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
-
-    print("Received a new message: ")
-    print(message.payload)
-    print("from topic: ")
-    print(message.topic)
-    print("--------------\n\n")
-
+    logger.info ("Topic {} received a new message {}".format(message.topic,message.payload))
+    
 
 def setupAWSClient(config_json):    
     logger.debug("setting up device connection to AWS")
@@ -82,7 +77,7 @@ if __name__ == "__main__":
 
     logger.info("Testing module ")
 
-    setupEnvironment.setupLogging("false")
+    setupEnvironment.setupLogging(False)
 
     # Read in command-line parameters
     config_json = setupEnvironment.getConfig("src/config.json")

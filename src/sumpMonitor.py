@@ -5,10 +5,7 @@ import time
 import numpy
 import logging
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-
+logger = logging.getLogger("sump.sumpMonitor")
 
 sump_last_turned_on_time=time.time() # time in seconds as a float
 sump_turn_on_counter=0
@@ -20,7 +17,7 @@ def log_turn_on(channel):
 
   sump_turn_on_counter += 1
   sump_last_turned_on_time=time.time()
-  print('sump turned on: count: {}'.format(sump_turn_on_counter))
+  logger.info('sump turned on: count: {}'.format(sump_turn_on_counter))
 
 def setup_gpio():
   logger.info("Setup GPIO")
@@ -78,16 +75,16 @@ def measureSumpWaterLevel():
         waterLevelMeasurements.append(getWaterLevel())
         time.sleep(0.1)
 
-    print("measureSumpWaterLevel() - {}".format(waterLevelMeasurements))
+    logger.info("measureSumpWaterLevel() - {}".format(waterLevelMeasurements))
     return(numpy.median(waterLevelMeasurements))
         
 def cleanup_gpio():
   GPIO.cleanup()
   
 if __name__ == "__main__":
-  print("testing module")
+  logger.info("testing module")
   setup_gpio()
-  print(measureSumpWaterLevel())
+  logger.info(measureSumpWaterLevel())
   cleanup_gpio()
 
 
