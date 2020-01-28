@@ -12,7 +12,7 @@ import sumpMonitor
 import AWSIoTServices
 import setupEnvironment
 
-logger = logging.getLogger()
+logger = logging.getLogger("sump.sump_monitor_service")
 
 setupEnvironment.setupLogging(False)
 config_json = setupEnvironment.getConfig("/home/pi/sump_pump_monitor/src/config.json")
@@ -32,7 +32,7 @@ while True:
     payload["sumpMinSinceLastTurnOn"]=mins_since_last_pump
     payload["sumpWaterLevel"]=cmDistance
 
-    print("publishing device data {}".format(json.dumps(payload)))
+    logger.info("publishing device data {}".format(json.dumps(payload)))
     
     AWSIoTServices.sendMessage(topic, json.dumps(payload))
     time.sleep(10)
