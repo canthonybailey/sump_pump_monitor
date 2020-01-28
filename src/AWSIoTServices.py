@@ -1,10 +1,13 @@
 # setup logging
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
+import json
+
 logger = logging.getLogger("sump.AWSIoTService")
 
 myAWSIoTMQTTClient = None
 clientConnected = False
+DISCONNECT_COUNT = 0
 
 def onClientConnected():
     logger.debug("client online")
@@ -12,9 +15,11 @@ def onClientConnected():
     clientConnected = True
 
 def onClientDisconnected():
-    logger.debug("client offline")
-    global clientConnected 
+    global clientConnected, DISCONNECT_COUNT
     clientConnected = False
+    DISCONNECT_COUNT += 1
+
+    logger.debug("client offline {} times".format(DISCONNECT_COUNT))
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
@@ -46,15 +51,20 @@ def setupAWSClient(config_json):
     myAWSIoTMQTTClient.onOffline = onClientDisconnected
 
 
-def sendMessage(topic, messageJson):
+def sendMessage(topic, message):
     logger.info("sending message to AWS")
 
     # Connect and subscribe to AWS IoT
     global myAWSIoTMQTTClient
     global clientConnected
+    global DISCONNECT_COUNT
+
+    # add disconnect count to message
+    messageJson = json.loads(message)
+    messageJson["disconnectCount"] = DISCONNECT_COUNT
 
     try:
-       myAWSIoTMQTTClient.publish(topic, messageJson, 1)
+       myAWSIoTMQTTClient.publish(topic, json.dumps(messageJson), 1)
     except Exception as e:
        logger.error("Could not publish message to topic {} : {}".format(topic, e))
 

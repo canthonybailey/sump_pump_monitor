@@ -1,9 +1,9 @@
 {
     "awsIoT": {
-        "rootCACertFile": "/home/pi/sump_pump_monitor/config/root-CA.crt",
-        "privateKeyFile": "/home/pi/sump_pump_monitor/config/sump-pump-monitor.private.key",
-        "publicKeyFile": "/home/pi/sump_pump_monitor/config/sump-pump-monitor.public.key",
-        "certificateFile": "/home/pi/sump_pump_monitor/config/sump-pump-monitor.cert.pem",
+        "rootCACertFile": "sump_pump_monitor/config/root-CA.crt",
+        "privateKeyFile": "sump_pump_monitor/config/sump-pump-monitor.private.key",
+        "publicKeyFile": "sump_pump_monitor/config/sump-pump-monitor.public.key",
+        "certificateFile": "sump_pump_monitor/config/sump-pump-monitor.cert.pem",
         "clientId": "sdk-nodejs-1712d058-d54d-41bf-a0c8-b0deb560147c",
         "endpoint": "a11sapmt9oqtok-ats.iot.us-west-2.amazonaws.com",
         "port": 8883

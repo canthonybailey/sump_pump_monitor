@@ -5,6 +5,7 @@ import logging.handlers
 import argparse
 import sys
 import json
+import os
 import time  # this is only being used as part of the example
 
 # include sub modules
@@ -15,7 +16,13 @@ import setupEnvironment
 logger = logging.getLogger("sump.sump_monitor_service")
 
 setupEnvironment.setupLogging(False)
-config_json = setupEnvironment.getConfig("/home/pi/sump_pump_monitor/src/config.json")
+
+# dirpath = os.getcwd()
+#logger.info("current directory is : " + dirpath)
+#foldername = os.path.basename(dirpath)
+#logger.info("Directory name is : " + foldername)
+
+config_json = setupEnvironment.getConfig("sump_pump_monitor/src/config.json")
 AWSIoTServices.setupAWSClient(config_json)
 AWSIoTServices.connect()
 

@@ -3,18 +3,23 @@
 Dependencies:
 Python: 
   python3  // Python 2 reads json strings as unicode
-  sudo pip install paho-mqtt  // systemd service runs as root, need to ensure root has access to python libraries
+ // systemd service runs as root, need to ensure root has access to python libraries
+ // or use --user with systemd 
 
   pip3 install AWSIoTPythonSDK
   pip3 install rpi.gpio
   pip3 install numpy
 
 Service definition needs to be in 
-  ln ~/sump_pump_monitor/src/sump_pump_monitor.service /lib/systemd/system/sump_pump_monitor.service
+  // ln ~/sump_pump_monitor/src/sump_pump_monitor.service /lib/systemd/system/sump_pump_monitor.service
+  mkdir ~/.config/systemd/user
+  ln ~/sump_pump_monitor/src/sump_pump_monitor.service ~/.config/systemd/user/sump_pump_monitor.service
+  
 
-  systemctl daemon-reload
-  systemctl start|stop|restart sump_pump_monitor
-  systemctl status sump_pump_monitor
+  systemctl --user daemon-reload
+  systemctl --user enable sump_pump_monitor
+  systemctl --user start|stop|restart sump_pump_monitor
+  systemctl --user status sump_pump_monitor
 
 
 AWS Iot
