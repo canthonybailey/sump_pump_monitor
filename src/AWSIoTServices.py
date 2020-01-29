@@ -42,8 +42,8 @@ def setupAWSClient(config_json):
     # AWSIoTMQTTClient connection configuration
     AWSIOT_CLIENT.configureAutoReconnectBackoffTime(1, 32, 20)
     # Infinite offline Publish queueing
-    AWSIOT_CLIENT.configureOfflinePublishQueueing(-1)
-    AWSIOT_CLIENT.configureDrainingFrequency(2)  # Draining: 2 Hz
+    #AWSIOT_CLIENT.configureOfflinePublishQueueing(-1)
+    #AWSIOT_CLIENT.configureDrainingFrequency(2)  # Draining: 2 Hz
     AWSIOT_CLIENT.configureConnectDisconnectTimeout(10)  # 10 sec
     AWSIOT_CLIENT.configureMQTTOperationTimeout(5)  # 5 sec
 
@@ -96,7 +96,6 @@ def connect():
         AWSIOT_CLIENT.connect()
     except Exception as e:
         AWSIOT_ERROR_COUNT +=1
-        AWSIOT_CLIENT.disconnect()
         logger.error("Could not connect to AWS IoT: {}".format(e))
 
     
