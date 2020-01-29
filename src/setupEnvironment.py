@@ -5,7 +5,7 @@ import sys
 
 
 # Defaults
-LOG_FILENAME = "/home/pi/sump_pump_monitor/log/sump_monitor_service.log"
+LOG_FILENAME = "sump_pump_monitor/log/sump_monitor_service.log"
 LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 
 
