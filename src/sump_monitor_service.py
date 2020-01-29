@@ -35,11 +35,12 @@ while True:
     cmDistance = round(sumpMonitor.measureSumpWaterLevel(),1)
 
     mins_since_last_pump=round((time.time()-sumpMonitor.sump_last_turned_on_time)/60,1)
-
+    status = "Normal" if (mins_since_last_pump <= 120) else "Alert"
     payload={}
     payload["sumpTurnOnCount"]=sumpMonitor.sump_turn_on_counter
     payload["sumpMinSinceLastTurnOn"]=mins_since_last_pump
     payload["sumpWaterLevel"]=cmDistance
+    payload["sumpStatus"]=status
 
     logger.info("publishing device data {}".format(json.dumps(payload)))
     

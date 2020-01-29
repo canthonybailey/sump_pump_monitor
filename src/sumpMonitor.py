@@ -66,17 +66,30 @@ def getWaterLevel():
     
     return(mmDistance)
 
+previousMeasurement = None
 
 def measureSumpWaterLevel():
-    logger.debug("measure water level - median of samples measurement")
+    global previousMeasurement, sump_last_turned_on_time, sump_turn_on_counter
+
     numIterations = 10
     waterLevelMeasurements=[]
     for i in range(0,numIterations):
         waterLevelMeasurements.append(getWaterLevel())
         time.sleep(0.1)
 
-    logger.info("measureSumpWaterLevel() - {}".format(waterLevelMeasurements))
-    return(numpy.median(waterLevelMeasurements))
+    curMeasurement = numpy.median(waterLevelMeasurements)
+    logger.info("Current water level = {}".format(curMeasurement))
+    logger.debug("Current water level measurements = {}".format(waterLevelMeasurements))
+
+    # check for sump cycled
+    if (previousMeasurement is None) or ((previousMeasurement - curMeasurement) > 5):
+      sump_turn_on_counter +=1
+      sump_last_turned_on_time = time.time()
+      logger.info("Sump pump cycle {} detected at {}".format(sump_turn_on_counter, sump_last_turned_on_time))
+    
+    previousMeasurement=curMeasurement
+
+    return(curMeasurement)
         
 def cleanup_gpio():
   GPIO.cleanup()
